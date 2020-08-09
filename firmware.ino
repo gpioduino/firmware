@@ -34,7 +34,7 @@ void loop() {
 void executeCommand(char *input) {
   char *command = strtok(input, " ");
   if (command == NULL) {
-    Serial.write("ERROR NO COMMAND;");
+    Serial.write("ERROR NO_COMMAND;");
     return;
   }
 
@@ -51,7 +51,7 @@ void executeCommand(char *input) {
   } else if (strcmp(command, "AW") == 0) {
     executeAnalogWrite(command);
   } else {
-    Serial.write("ERROR UNKNOWN COMMAND;");
+    Serial.write("ERROR UNKNOWN_COMMAND;");
   }
 }
 
@@ -69,7 +69,7 @@ void executePinMode(char *command) {
   } else if (strcmp(mode, "O") == 0) {
     pinMode(pin, OUTPUT);
   } else {
-    Serial.write("ERROR UNKNOWN MODE;");
+    Serial.write("ERROR UNKNOWN_MODE;");
     return;
   }
 
@@ -96,7 +96,7 @@ void executeDigitalWrite(char *command) {
    }else if (strcmp(val, "L") == 0) {
       digitalWrite(pin, LOW);
    } else {
-      Serial.write("ERROR UNKNOWN DIGITAL VALUE;");
+      Serial.write("ERROR UNKNOWN_DIGITAL_VALUE;");
       return;
    }
 

@@ -56,25 +56,71 @@ void executeCommand(char *input) {
 }
 
 void executeEcho(char *command) {
- Serial.println("ECHO");
+  char *value = strtok(NULL, " ");
+  ack(value);
 }
 
 void executePinMode(char *command) {
-  Serial.println("PIN MODE");
+  int pin = atoi(strtok(NULL, " "));
+  char *mode = strtok(NULL, " ");
+
+  if (strcmp(mode, "I") == 0) {
+    pinMode(pin, INPUT);
+  } else if (strcmp(mode, "O") == 0) {
+    pinMode(pin, OUTPUT);
+  } else {
+    Serial.write("ERROR;");
+    return;
+  }
+  
+  Serial.write("ACK;");
 }
 
 void executeDigitalRead(char *command) {
-  Serial.println("DIGITAL READ");
+  int pin = atoi(strtok(NULL, " "));
+  int value = digitalRead(pin);
+  
+  char c[2];
+  c[0] = value > 0 ? 'H' : 'L';
+  c[1] = '\0';
+  
+  ack(c);
 }
 
 void executeDigitalWrite(char *command) {
-  Serial.println("DIGITAL WRITE");
+   int pin = atoi(strtok(NULL, " "));
+   char *val = strtok(NULL, " ");
+
+   if (strcmp(val, "H") == 0) {
+      digitalWrite(pin, HIGH);
+   }else if (strcmp(val, "L") == 0) {
+      digitalWrite(pin, LOW);
+   } else {
+      Serial.write("ERROR;");
+      return;
+   }
+
+   Serial.write("ACK;");
 }
 
 void executeAnalogRead(char *command) {
-  Serial.println("ANALOG READ");
+  int pin = atoi(strtok(NULL, " "));
+  int value = analogRead(pin);
+
+  char c[3];
+  itoa(value, c, 10);
+  ack(c);
 }
 
 void executeAnalogWrite(char *command) {
-  Serial.println("ANALOG WRITE");
+  int pin = atoi(strtok(NULL, " "));
+  int val = atoi(strtok(NULL, " "));
+  analogWrite(pin, val);
+  Serial.write("ACK;");
+}
+
+void ack(char *value) {
+  Serial.write("ACK ");
+  Serial.write(value);
+  Serial.write(";");
 }

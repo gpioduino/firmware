@@ -107,7 +107,7 @@ void executeAnalogRead(char *command) {
   int pin = atoi(strtok(NULL, " "));
   int value = analogRead(pin);
 
-  char c[3];
+  char c[4];
   itoa(value, c, 10);
   ack(c);
 }

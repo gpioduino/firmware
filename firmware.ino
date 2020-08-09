@@ -15,7 +15,7 @@ void loop() {
       
       unsigned long startTime = micros();
       int n = Serial.readBytesUntil(';', input, INPUT_MAX_LENGTH);
-      unsigned long readTime = (micros() - startTime) / 1000; // micros to milis then apply scale factor
+      unsigned long readTime = (micros() - startTime) / 1000; // micros to millis
 
       // timeout occurred
       if (readTime > (TIMEOUT * TIMEOUT_SCALE)) {
@@ -25,7 +25,7 @@ void loop() {
       
       // bytes have been read
       if (n > 0) {
-        input[n] = '\0'; // null-terminate so c string functions work correctly.
+        input[n] = '\0'; // null-terminate so C string functions work correctly.
         executeCommand(input);
       }
     }

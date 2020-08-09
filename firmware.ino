@@ -10,19 +10,19 @@ void setup() {
 
 void loop() {
     if (Serial.available() > 0) {
-      
+
       char input[INPUT_MAX_LENGTH+1];
-      
+
       unsigned long startTime = micros();
       int n = Serial.readBytesUntil(';', input, INPUT_MAX_LENGTH);
       unsigned long readTime = (micros() - startTime) / 1000; // micros to millis
 
       // timeout occurred
       if (readTime > (TIMEOUT * TIMEOUT_SCALE)) {
-        Serial.write("ERROR;");
+        Serial.write("ERROR TIMEOUT;");
         return;
       }
-      
+
       // bytes have been read
       if (n > 0) {
         input[n] = '\0'; // null-terminate so C string functions work correctly.
@@ -34,7 +34,7 @@ void loop() {
 void executeCommand(char *input) {
   char *command = strtok(input, " ");
   if (command == NULL) {
-    Serial.write("ERROR;");
+    Serial.write("ERROR NO COMMAND;");
     return;
   }
 
@@ -51,7 +51,7 @@ void executeCommand(char *input) {
   } else if (strcmp(command, "AW") == 0) {
     executeAnalogWrite(command);
   } else {
-    Serial.write("ERROR;");
+    Serial.write("ERROR UNKNOWN COMMAND;");
   }
 }
 
@@ -69,21 +69,21 @@ void executePinMode(char *command) {
   } else if (strcmp(mode, "O") == 0) {
     pinMode(pin, OUTPUT);
   } else {
-    Serial.write("ERROR;");
+    Serial.write("ERROR UNKNOWN MODE;");
     return;
   }
-  
+
   Serial.write("ACK;");
 }
 
 void executeDigitalRead(char *command) {
   int pin = atoi(strtok(NULL, " "));
   int value = digitalRead(pin);
-  
+
   char c[2];
   c[0] = value > 0 ? 'H' : 'L';
   c[1] = '\0';
-  
+
   ack(c);
 }
 
@@ -96,7 +96,7 @@ void executeDigitalWrite(char *command) {
    }else if (strcmp(val, "L") == 0) {
       digitalWrite(pin, LOW);
    } else {
-      Serial.write("ERROR;");
+      Serial.write("ERROR UNKNOWN DIGITAL VALUE;");
       return;
    }
 

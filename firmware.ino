@@ -1,6 +1,7 @@
-#define MAX_LENGTH 15
-#define TIMEOUT 950000
-#define BPS 9600
+#define BPS 9600 // default serial speed
+#define TIMEOUT 1000 // default timeout
+#define TIMEOUT_SCALE 0.9 // 90% accuracy
+#define INPUT_MAX_LENGTH 15 // max size for our input buffer
 
 void setup() {
   Serial.begin(BPS);
@@ -10,14 +11,14 @@ void setup() {
 void loop() {
     if (Serial.available() > 0) {
       
-      char input[MAX_LENGTH+1];
+      char input[INPUT_MAX_LENGTH+1];
       
       unsigned long startTime = micros();
-      int n = Serial.readBytesUntil(';', input, MAX_LENGTH);
-      unsigned long readTime = micros() - startTime;
+      int n = Serial.readBytesUntil(';', input, INPUT_MAX_LENGTH);
+      unsigned long readTime = (micros() - startTime) / 1000; // micros to milis then apply scale factor
 
       // timeout occurred
-      if (readTime > TIMEOUT) {
+      if (readTime > (TIMEOUT * TIMEOUT_SCALE)) {
         Serial.write("ERROR;");
         return;
       }
